@@ -8,7 +8,7 @@ pipeline {
   }
   tools {
     maven = "Mavenmy"
-    java = "java17"
+    jdk = "java17"
   }
   stages {
     stage ('Building the application') {
