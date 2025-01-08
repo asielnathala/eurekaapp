@@ -20,8 +20,10 @@ pipeline {
     stage ('unit test cases') {
      steps {
         echo "Performing Unit test cases for ${env.APPLICATION_NAME} application"
-        sh "mvn test"
-        
+        sh "mvn test"  
+     }
+     post {
+      junit '/target/surefire-reports/*.xml'
      }
   }  
 }
