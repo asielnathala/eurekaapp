@@ -7,8 +7,8 @@ pipeline {
     APPLICATION_NAME = "eureka"
   }
   tools {
-    maven = 'Mavenmy'
-    jdk = 'java17'
+    maven  'Mavenmy'
+    jdk 'java17'
   }
   stages {
     stage ('Building the application') {
