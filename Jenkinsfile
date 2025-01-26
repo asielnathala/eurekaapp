@@ -51,8 +51,8 @@ pipeline {
        cp ${workspace}/target/i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING}  ./.cicd
        ls -la ./.cicd
        echo ************docker build now working********
-       docker build -t --force-rm --no-cache --pull --rm=true ${env.DOCKER_HUB}/${nv.APPLICATION_NAME}:${GIT_COMMIT}  ./.cicd
-       dokcer images
+       docker build -t --force-rm --no-cache --pull --rm=true ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}  ./.cicd
+       docker images
        """
     }
 
