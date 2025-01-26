@@ -42,6 +42,15 @@ pipeline {
     echo "custm app: ${env.APPLICATION_NAME}-${currentBuild.number}-${BRANCH_NAME}-${env.POM_PACKAGING}"
    }
   }
+  stage ('Docker Build') {
+    steps {
+       sh """
+       ls -la 
+       """
+    }
+
+  }
+
 }
 }
 
