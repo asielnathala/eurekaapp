@@ -52,7 +52,7 @@ pipeline {
        ls -la ./.cicd
        echo ************docker build now working********
        docker build -t --force-rm --no-cache --pull --rm=true ${env.DOCKER_HUB}/${nv.APPLICATION_NAME}:${GIT_COMMIT}  ./.cicd
-
+       dokcer images
        """
     }
 
