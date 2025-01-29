@@ -31,8 +31,8 @@ pipeline {
      post {
       always {
         junit 'target/surefire-reports/*.xml'
-  }
-}  
+      }
+     }  
     }
     stage ('Sonar stage now') {
       steps {
@@ -45,7 +45,7 @@ pipeline {
         """
       }
     }
-  }  
+   
     stage ('Docker && Custom Format') {
      steps {
 
@@ -77,6 +77,6 @@ pipeline {
   }
 
 }
-
+}
 
 
