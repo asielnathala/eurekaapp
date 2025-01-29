@@ -32,8 +32,9 @@ pipeline {
       always {
         junit 'target/surefire-reports/*.xml'
   }
-}
-    stage ('Sonar stage now') {
+}  
+    }
+      stage ('Sonar stage now') {
       steps {
         sh """
            echo " Now started sonar code quality coverage stage now"
