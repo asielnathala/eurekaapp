@@ -9,7 +9,7 @@ pipeline {
     POM_PACKAGING = readMavenPom().getPackaging()
     DOCKER_HUB = "docker.io/dravikumar442277"
     DOCKER_CREDS = credentials('dravikumar442277_docker_creds')
-    SONAR_URL = "http://34.59.239.51:9000"
+    SONAR_URL = "http://34.56.114.45:9000"
     SONAR_TOKENS = credentials('sonar_token')
   }
   tools {
@@ -40,8 +40,8 @@ pipeline {
            echo " Now started sonar code quality coverage stage now"
            mvn clean verify sonar:sonar \
             -Dsonar.projectKey=127-eureka \
-            -Dsonar.host.url= ${env.SONAR_URL} \
-            -Dsonar.login=${SONAR_TOKENS}
+            -Dsonar.host.url=${env.SONAR_URL} \
+            -Dsonar.login=${env.SONAR_TOKENS}
         """
       }
     }
@@ -72,11 +72,22 @@ pipeline {
 
        """
     }
+  }
+  stage ('Deploy to dokcer dev server') {
+    steps {
+      echo "*****************Deploying to Dev Environment here########################"
+      withCredentials([usernamePassword(credentialsId: 'maha_creds_docker', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+    // some block
+     # sshpass -p password -v user@ipaddress command
+     #sshpass -pfoobar ssh -o StrictHostKeyChecking=no user@host command_to_run
 
+      "sh sshpass -p ${PASSWORD} -o  StrictHostKeyChecking=no -v ${USERNAME}@${docker_server_ip} hostname "
+}
+   
+    }
 
   }
 
 }
 }
-
 
