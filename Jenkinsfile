@@ -81,7 +81,7 @@ pipeline {
      # sshpass -p password -v user@ipaddress command
      #sshpass -pfoobar ssh -o StrictHostKeyChecking=no user@host command_to_run
 
-      "sh sshpass -p ${PASSWORD} -o  StrictHostKeyChecking=no -v ${USERNAME}@${docker_server_ip} hostname "
+      sh "sshpass -p ${PASSWORD} -o  StrictHostKeyChecking=no -v ${USERNAME}@${docker_server_ip} hostname "
 }
    
     }
