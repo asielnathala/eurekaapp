@@ -53,7 +53,7 @@ pipeline {
        // custom names for app jar
        // applicationname-buildnumber-branchnname-packaging
        echo "custm app: ${env.APPLICATION_NAME}-${currentBuild.number}-${BRANCH_NAME}-${env.POM_PACKAGING}"
-   }
+      }
   }
    stage ('Docker Build') {
     steps {
@@ -73,6 +73,7 @@ pipeline {
     }
   }
   stage ('Deploy to docker dev server') {
+  
     steps {
 
 
@@ -102,8 +103,8 @@ pipeline {
    }
     }
 
-  }
-stage ('Deploy to docker test server') {
+
+  stage ('Deploy to docker test server') {
     steps {
 
 
@@ -130,8 +131,7 @@ stage ('Deploy to docker test server') {
       sh "sshpass -p ${PASSWORD} -v ssh -o  StrictHostKeyChecking=no  ${USERNAME}@${docker_server_ip} docker run -d -p 6761:8761 --name ${env.APPLICATION_NAME}-test ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
 
       }
-   }
-
-}
-}
+      }
+      }
   }
+}
