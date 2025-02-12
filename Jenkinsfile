@@ -88,9 +88,10 @@ pipeline {
       when {
           anyOf {
                 expression {
-                        params.sonarScans == 'yes'
                         params.buildOnly == 'yes'
                         params.dockerPush == 'yes'
+                        params.sonarScans == 'yes'
+                        
                     }
                 }
             }
