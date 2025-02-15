@@ -179,6 +179,12 @@ pipeline {
        }
       }
     }
+    stage ('clean-ws') {
+      steps {
+        cleanWs()
+      }
+
+    }
   }
 }
 // Define the dockerDeploy method outside the pipeline block
