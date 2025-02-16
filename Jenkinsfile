@@ -142,7 +142,7 @@ pipeline {
         script {
              imageValidation().call()
              dockerDeploy ('dev','5761','8761').call()
-       }
+        }
       }
     }
     stage ('Deploy to test') {
