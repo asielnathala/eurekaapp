@@ -215,7 +215,7 @@ def imageValidation() {
     return {
         println("Pulling the Docker image")
         try {
-            sh "docker pull ${env.APPLICATION_NAME}-${env.DOCKER_HUB}/${env.DOCKER_REPO}:$GIT_COMMIT"
+            sh "docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
             println ("Pull Success,!!! Deploying !!!!!") 
         }
         catch (Exception e) {
