@@ -70,8 +70,9 @@ pipeline {
       when {
         anyOf {
             expression {
-               params.dockerPush == 'yes'
                params.buildOnly == 'yes'
+               params.dockerPush == 'yes'
+               
                
             } 
         }
@@ -90,9 +91,10 @@ pipeline {
       when {
           anyOf {
                 expression {
+                        params.sonarScans == 'yes'
                         params.buildOnly == 'yes'
                         params.dockerPush == 'yes'
-                        params.sonarScans == 'yes'
+                        
                         
                     }
                 }
@@ -180,10 +182,10 @@ pipeline {
 // Define the dockerDeploy method outside the pipeline block
 def dockerDeploy(envDeploy, hostPort, contPort) {
     return {
+            echo "******************** Deploying to $envDeploy Environment ********************"
+            withCredentials([usernamePassword(credentialsId: 'maha_docker_vm_creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
         
-        stage ('Deploying to  Environment') {
             script {
-                withCredentials([usernamePassword(credentialsId: 'maha_creds_docker', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                     // some block
                     sh "sshpass -p ${PASSWORD} -v ssh -o  StrictHostKeyChecking=no  ${USERNAME}@${docker_server_ip} docker pull  ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
                     try {
@@ -195,10 +197,11 @@ def dockerDeploy(envDeploy, hostPort, contPort) {
                         echo "caught the error: $err"
                     }
                     echo "********************** creating the container ****************************************"
-                    sh "sshpass -p ${PASSWORD} -v ssh -o  StrictHostKeyChecking=no  ${USERNAME}@${docker_server_ip} docker run -d -p $hostPort:$contPort --name ${env.APPLICATION_NAME}-$envDeploy ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
+                 // Run the container
+                sh "sshpass -p '$PASSWORD' -v ssh -o StrictHostKeyChecking=no $USERNAME@$docker_server_ip \"docker run --restart always --name ${env.APPLICATION_NAME}-$envDeploy -p $hostPort:$contPort -d ${env.DOCKER_HUB}/${env.DOCKER_REPO}:$GIT_COMMIT\"
                 }
             }
-        }
+       
     }
 }
 
@@ -215,10 +218,10 @@ def imageValidation() {
     return {
         println("Pulling the Docker image")
         try {
-            sh "docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
+            sh "docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:$GIT_COMMIT"
             println ("Pull Success,!!! Deploying !!!!!") 
         }
-        catch (Exception e) {
+        catch (Exception) {
             println("OOPS, Docker image with this tag is not available")
             println("So, Building the app, creating the image and pushing to registry")
             buildApp().call()
@@ -234,8 +237,8 @@ def dockerBuildandPush() {
         echo "listing files in .cicd folder"
         sh "ls -la ./.cicd"
         echo "******************** Building Docker Image ********************"
-        
-        sh "docker build --force-rm --no-cache --pull --rm=true --build-arg JAR_SOURCE=i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} --build-arg JAR_DEST=i27-${env.APPLICATION_NAME}-${currentBuild.number}-${BRANCH_NAME}.${env.POM_PACKAGING} -t ${env.DOCKER_HUB}/${env.DOCKER_REPO}:$GIT_COMMIT ./.cicd"
+        sh "docker build --force-rm --no-cache --pull --rm=true --build-arg JAR_SOURCE=i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} --build-arg JAR_DEST=i27-${env.APPLICATION_NAME}-${currentBuild.number}-${BRANCH_NAME}.${env.POM_PACKAGING} \
+            -t ${env.DOCKER_HUB}/${env.DOCKER_REPO}:$GIT_COMMIT ./.cicd"
         
         echo "******************** Logging to Docker Registry ********************"
         sh "docker login -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}"
