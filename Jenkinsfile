@@ -1,6 +1,6 @@
 @Library("com.i27academy.slb@master") _
-dockerPipeline(
-  appName: 'malliapp'
+K8sPipeline(
+  appName: 'eureka'
 )
 
 
